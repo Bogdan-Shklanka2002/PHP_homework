@@ -11,11 +11,13 @@
 function repeatArrayValues(array $input)
 {
     $arr = [];
-    for($i = 0; $i < strlen($input); $i++){
+    for($i = 0; $i < count($input); $i++){
         for($j = 0; $j < $input[$i]; $j++){
-            array_push($arr, $input[i]);
+            $arr[] = $input[$i];
         }
-    }   
+
+    } 
+    return $arr;  
 }
 
 /**
@@ -28,35 +30,20 @@ function repeatArrayValues(array $input)
  */
 function getUniqueValue(array $input)
 {
-    $arr = [];
-    if(count($input) > 1){
-        $num = $input[0];
-        for($i = 0; $i < count($input); $i++ ){
-            if(!in_array($input[$i], $arr)){
-                array_push($arr, $input[$i]);
-            }
-            else{
-                for($j = 0; $j < count($arr); $j++){
-                    if($arr[$j] == $input[$i]){
-                        unset($arr[$j]);
-                    }
-                }
-            }
+    $arr = array_count_values($input);
+    $result = [];
+    foreach($arr as $key => $value){
+        if($value == 1){
+            $result[] = $key;
         }
-        for($i = 0; $i < count($arr); $i++){
-            if ($arr[$i] < $num){
-                $num = $arr[$i];
-            }            
-        }
-        return $num;
     }
-    else{
-        if(count($input) == 0){
-            return 0;
+    if(isset($result)){
+        if(count($result) >= 1){
+            return min($result);
         }
-        return $input[0];
+    } else {
+        return 0;
     }
-    
 }
 
 /**

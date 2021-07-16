@@ -4,6 +4,8 @@ namespace src\oop;
 
 use src\oop\Commands\CommandInterface;
 
+use function PHPSTORM_META\type;
+
 class Calculator
 {
     /**
@@ -127,7 +129,25 @@ class Calculator
     public function undo()
     {
         // TODO implement undo logic here
+        $intent = end($this->intents);
+        $symb= '';
+        foreach ($this->commands as $key => $value){
+            if(get_class($value) == get_class($intent[0])){
+                 $symb = $key;
+            }
+        }
+        switch($symb){
+            case '+': $symb = '-';break;
+            case '-': $symb = '+';break;
+            case '*': $symb = '/';break;
+            case '/': $symb = '*'; break;
+        }
+        
+        // $this->compute($symb, $intent[1][0]);
+        if($this->intents){
+            array_unshift($this->intents, [$this->getCommand($symb), $intent[1]]);
 
+        }
         return $this;
     }
 
@@ -139,7 +159,14 @@ class Calculator
     public function replay()
     {
         // TODO implement replay logic here
-
+        $intent = end($this->intents);
+        $command = '';
+        foreach ($this->commands as $key => $value){
+            if(get_class($value) == get_class($intent[0])){
+                 $command = $key;
+            }
+        }
+        $this->compute($command, $intent[1][0]);
         return $this;
     }
 
@@ -153,6 +180,10 @@ class Calculator
     {
         $result = $this->value;
 
+        // foreach($this->intents as $intent){
+        //     var_dump($intent);
+        // }
+        // die();
         foreach ($this->intents as list($command, $args)) {
             array_unshift($args, $result);
 
